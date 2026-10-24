@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import SubmitComplaint from './pages/SubmitComplaint'
 import MyComplaints from './pages/MyComplaints'
 import AdminDashboard from './pages/AdminDashboard'
+import Profile from './pages/Profile'
 import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import './App.css'
@@ -68,14 +69,26 @@ export default function App() {
               path="/"
               element={<Dashboard user={user} complaints={complaints} />}
             />
+
             <Route
               path="/submit"
-              element={<SubmitComplaint onSubmit={addComplaint} user={user} />}
+              element={
+                <SubmitComplaint onSubmit={addComplaint} user={user} />
+              }
             />
+
             <Route
               path="/complaints"
-              element={<MyComplaints complaints={complaints} user={user} />}
+              element={
+                <MyComplaints complaints={complaints} user={user} />
+              }
             />
+
+            <Route
+              path="/profile"
+              element={<Profile user={user} />}
+            />
+
             <Route
               path="/admin"
               element={
@@ -89,6 +102,7 @@ export default function App() {
                 )
               }
             />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

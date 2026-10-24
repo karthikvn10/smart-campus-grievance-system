@@ -1,4 +1,6 @@
 
+import { Link } from 'react-router-dom'
+
 export default function Navbar({ user }) {
   const today = new Date().toLocaleDateString('en-IN', {
     day: 'numeric',
@@ -10,20 +12,29 @@ export default function Navbar({ user }) {
     <header className="topbar">
       <div>
         <h2>Campus Services</h2>
-        <p>Home / {user.role === 'Admin' ? 'Administration' : 'Student Portal'}</p>
+        <p>
+          Home / {user.role === 'Admin' ? 'Administration' : 'Student Portal'}
+        </p>
       </div>
 
       <div className="topbar-right">
         <div className="today-date">▦ &nbsp; {today}</div>
-        <div className="user-chip">
+
+        <Link
+          to="/profile"
+          className="user-chip"
+          style={{ textDecoration: 'none', color: 'inherit' }}
+          aria-label="Open my profile"
+        >
           <div className="avatar">
             {(user.name || 'U').charAt(0).toUpperCase()}
           </div>
+
           <div className="user-details">
             <strong>{user.name}</strong>
             <span>{user.role}</span>
           </div>
-        </div>
+        </Link>
       </div>
     </header>
   )
