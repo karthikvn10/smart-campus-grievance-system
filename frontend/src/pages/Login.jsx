@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 export default function Login({ onLogin }) {
   const [mode, setMode] = useState('existing')
+  const [role, setRole] = useState('Student')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -16,7 +17,13 @@ export default function Login({ onLogin }) {
       localStorage.getItem('campusCareAccounts') || '[]'
     )
 
+    // Student registration
     if (mode === 'new') {
+      if (role === 'Admin') {
+        setMessage('Administrator accounts cannot be registered here.')
+        return
+      }
+
       if (!name.trim() || !email.trim() || !password) {
         setMessage('Please fill in all fields.')
         return
@@ -27,8 +34,10 @@ export default function Login({ onLogin }) {
         return
       }
 
+      const normalizedEmail = email.trim().toLowerCase()
+
       const existingAccount = accounts.find(
-        (account) => account.email.toLowerCase() === email.trim().toLowerCase()
+        (account) => account.email.toLowerCase() === normalizedEmail
       )
 
       if (existingAccount) {
@@ -38,7 +47,7 @@ export default function Login({ onLogin }) {
 
       const newAccount = {
         name: name.trim(),
-        email: email.trim().toLowerCase(),
+        email: normalizedEmail,
         password,
         role: 'Student',
       }
@@ -49,15 +58,40 @@ export default function Login({ onLogin }) {
       )
 
       setMode('existing')
+      setRole('Student')
       setPassword('')
       setMessage('Account created! Please log in.')
       return
     }
 
+    // Administrator login for project demonstration
+    if (role === 'Admin') {
+      const adminEmail = 'admin@campuscare.com'
+      const adminPassword = 'Admin@123'
+
+      if (
+        email.trim().toLowerCase() !== adminEmail ||
+        password !== adminPassword
+      ) {
+        setMessage('Invalid administrator email or password.')
+        return
+      }
+
+      onLogin({
+        name: 'CampusCare Administrator',
+        email: adminEmail,
+        role: 'Admin',
+      })
+
+      return
+    }
+
+    // Existing student login
     const account = accounts.find(
       (item) =>
-        item.email === email.trim().toLowerCase() &&
-        item.password === password
+        item.email.toLowerCase() === email.trim().toLowerCase() &&
+        item.password === password &&
+        item.role === 'Student'
     )
 
     if (!account) {
@@ -68,7 +102,7 @@ export default function Login({ onLogin }) {
     onLogin({
       name: account.name,
       email: account.email,
-      role: account.role,
+      role: 'Student',
     })
   }
 
@@ -95,7 +129,9 @@ export default function Login({ onLogin }) {
           <p className="login-eyebrow">WELCOME TO CAMPUSCARE</p>
 
           <h2>
-            {mode === 'existing' ? 'Welcome back' : 'Create your account'}
+            {mode === 'existing'
+              ? 'Welcome back'
+              : 'Create your account'}
           </h2>
 
           <p className="login-subtitle">
@@ -107,7 +143,11 @@ export default function Login({ onLogin }) {
           <div className="login-tabs">
             <button
               type="button"
-              className={mode === 'existing' ? 'login-tab active' : 'login-tab'}
+              className={
+                mode === 'existing'
+                  ? 'login-tab active'
+                  : 'login-tab'
+              }
               onClick={() => {
                 setMode('existing')
                 setMessage('')
@@ -118,15 +158,32 @@ export default function Login({ onLogin }) {
 
             <button
               type="button"
-              className={mode === 'new' ? 'login-tab active' : 'login-tab'}
+              className={
+                mode === 'new' ? 'login-tab active' : 'login-tab'
+              }
               onClick={() => {
                 setMode('new')
+                setRole('Student')
                 setMessage('')
               }}
             >
               New User
             </button>
           </div>
+
+          <label>
+            Login as
+            <select
+              value={role}
+              onChange={(e) => {
+                setRole(e.target.value)
+                setMessage('')
+              }}
+            >
+              <option value="Student">Student</option>
+              <option value="Admin">Administrator</option>
+            </select>
+          </label>
 
           {mode === 'new' && (
             <label>
@@ -145,7 +202,11 @@ export default function Login({ onLogin }) {
             Email address
             <input
               type="email"
-              placeholder="you@college.edu"
+              placeholder={
+                role === 'Admin'
+                  ? 'admin@campuscare.com'
+                  : 'you@college.edu'
+              }
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -157,7 +218,9 @@ export default function Login({ onLogin }) {
             <input
               type="password"
               placeholder={
-                mode === 'new' ? 'At least 6 characters' : 'Enter your password'
+                mode === 'new'
+                  ? 'At least 6 characters'
+                  : 'Enter your password'
               }
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -166,6 +229,12 @@ export default function Login({ onLogin }) {
             />
           </label>
 
+          {role === 'Admin' && mode === 'existing' && (
+            <p className="demo-note">
+              Administrator demo login selected.
+            </p>
+          )}
+
           {message && (
             <p className="login-message" role="status">
               {message}
@@ -173,9 +242,11 @@ export default function Login({ onLogin }) {
           )}
 
           <button type="submit" className="primary-btn">
-            {mode === 'existing'
-              ? 'Log In →'
-              : 'Create Account →'}
+            {mode === 'new'
+              ? 'Create Account →'
+              : role === 'Admin'
+                ? 'Admin Login →'
+                : 'Log In →'}
           </button>
 
           <p className="login-switch">
@@ -186,7 +257,10 @@ export default function Login({ onLogin }) {
             <button
               type="button"
               onClick={() => {
-                setMode(mode === 'existing' ? 'new' : 'existing')
+                setMode(
+                  mode === 'existing' ? 'new' : 'existing'
+                )
+                setRole('Student')
                 setMessage('')
               }}
             >
