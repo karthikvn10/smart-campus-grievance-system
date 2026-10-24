@@ -1,7 +1,10 @@
-
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import HelpChatbot from './HelpChatbot'
 
 export default function Sidebar({ user, onLogout }) {
+  const [chatOpen, setChatOpen] = useState(false)
+
   const links = [
     { to: '/', icon: '◫', label: 'Dashboard' },
     { to: '/submit', icon: '＋', label: 'Submit Complaint' },
@@ -26,7 +29,9 @@ export default function Sidebar({ user, onLogout }) {
             key={link.to}
             to={link.to}
             end={link.to === '/'}
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            className={({ isActive }) =>
+              `nav-link ${isActive ? 'active' : ''}`
+            }
           >
             <span className="nav-icon">{link.icon}</span>
             {link.label}
@@ -36,7 +41,9 @@ export default function Sidebar({ user, onLogout }) {
         {user.role === 'Admin' && (
           <NavLink
             to="/admin"
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            className={({ isActive }) =>
+              `nav-link ${isActive ? 'active' : ''}`
+            }
           >
             <span className="nav-icon">⚙</span>
             Manage Complaints
@@ -45,16 +52,29 @@ export default function Sidebar({ user, onLogout }) {
       </nav>
 
       <div className="sidebar-bottom">
-        <div className="help-card">
-          <div className="help-symbol">?</div>
+        <button
+          type="button"
+          className="help-card"
+          onClick={() => setChatOpen(true)}
+        >
+          <span className="help-symbol">?</span>
           <strong>Need assistance?</strong>
-          <p>Report an issue and track its progress here.</p>
-        </div>
+          <span className="help-description">
+            Have a question? Our assistant is here to help.
+          </span>
+          <span className="help-action">Chat with us →</span>
+        </button>
 
         <button className="logout-btn" onClick={onLogout}>
           <span>↪</span> Sign out
         </button>
       </div>
+
+      {chatOpen && (
+        <div className="chatbot-container">
+          <HelpChatbot onClose={() => setChatOpen(false)} />
+        </div>
+      )}
     </aside>
   )
 }

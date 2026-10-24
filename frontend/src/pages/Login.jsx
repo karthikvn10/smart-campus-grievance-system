@@ -2,158 +2,203 @@
 import { useState } from 'react'
 
 export default function Login({ onLogin }) {
+  const [mode, setMode] = useState('existing')
   const [name, setName] = useState('')
-  const [role, setRole] = useState('Student')
-  const [error, setError] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [message, setMessage] = useState('')
 
-  function handleSubmit(event) {
-    event.preventDefault()
+  function handleSubmit(e) {
+    e.preventDefault()
+    setMessage('')
 
-    if (!name.trim()) {
-      setError('Please enter your name.')
+    const accounts = JSON.parse(
+      localStorage.getItem('campusCareAccounts') || '[]'
+    )
+
+    if (mode === 'new') {
+      if (!name.trim() || !email.trim() || !password) {
+        setMessage('Please fill in all fields.')
+        return
+      }
+
+      if (password.length < 6) {
+        setMessage('Password must contain at least 6 characters.')
+        return
+      }
+
+      const existingAccount = accounts.find(
+        (account) => account.email.toLowerCase() === email.trim().toLowerCase()
+      )
+
+      if (existingAccount) {
+        setMessage('An account with this email already exists.')
+        return
+      }
+
+      const newAccount = {
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        password,
+        role: 'Student',
+      }
+
+      localStorage.setItem(
+        'campusCareAccounts',
+        JSON.stringify([...accounts, newAccount])
+      )
+
+      setMode('existing')
+      setPassword('')
+      setMessage('Account created! Please log in.')
+      return
+    }
+
+    const account = accounts.find(
+      (item) =>
+        item.email === email.trim().toLowerCase() &&
+        item.password === password
+    )
+
+    if (!account) {
+      setMessage('Invalid email or password. Please try again.')
       return
     }
 
     onLogin({
-      name: name.trim(),
-      role,
-      email: `${name.trim().toLowerCase().replace(/\s+/g, '.')}@campus.demo`,
+      name: account.name,
+      email: account.email,
+      role: account.role,
     })
   }
 
   return (
     <div className="login-page">
-      {/* LEFT SIDE — PREMIUM HERO */}
-      <section className="login-art">
-        <div className="login-glow login-glow-one" />
-        <div className="login-glow login-glow-two" />
-
+      <div className="login-art">
         <div className="login-brand">
           <span className="login-brand-icon">✦</span>
           <span>CampusCare</span>
           <span className="login-brand-tag">SMART CAMPUS</span>
         </div>
 
-        <div className="login-hero-content">
-          <div className="login-eyebrow">
-            <span className="login-eyebrow-dot" />
-            YOUR VOICE. YOUR CAMPUS.
-          </div>
+        <div className="login-art-content">
+          <h1>A better campus starts with being heard.</h1>
+          <p>
+            Share your concerns, track complaints and help make
+            your campus a better place for everyone.
+          </p>
+        </div>
+      </div>
 
-          <h1>
-            Small voices.
-            <br />
-            <span>Meaningful change.</span>
-          </h1>
+      <div className="login-form-side">
+        <form className="login-form" onSubmit={handleSubmit}>
+          <p className="login-eyebrow">WELCOME TO CAMPUSCARE</p>
 
-          <p className="login-hero-description">
-            A better campus begins when someone speaks up.
-            Share concerns, track every update, and help create
-            a place where everyone belongs.
+          <h2>
+            {mode === 'existing' ? 'Welcome back' : 'Create your account'}
+          </h2>
+
+          <p className="login-subtitle">
+            {mode === 'existing'
+              ? 'Log in to continue to your campus workspace.'
+              : 'Join CampusCare and make your voice heard.'}
           </p>
 
-          <div className="login-features">
-            <div className="login-feature">
-              <span className="login-feature-icon">↗</span>
-              <div>
-                <strong>Speak up with ease</strong>
-                <small>
-                  Report campus concerns in a few simple steps
-                </small>
-              </div>
-            </div>
-
-            <div className="login-feature">
-              <span className="login-feature-icon">◎</span>
-              <div>
-                <strong>Know what’s happening</strong>
-                <small>
-                  Follow your complaint from start to finish
-                </small>
-              </div>
-            </div>
-
-            <div className="login-feature">
-              <span className="login-feature-icon">✳</span>
-              <div>
-                <strong>Make change together</strong>
-                <small>
-                  Help build a safer, better campus for everyone
-                </small>
-              </div>
-            </div>
-          </div>
-
-          <div className="login-art-footer">
-            <span className="login-footer-line" />
-            A campus that listens is a campus that grows.
-          </div>
-        </div>
-      </section>
-
-      {/* RIGHT SIDE — LOGIN FORM */}
-      <section className="login-form-side">
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="login-form-heading">
-            <span className="login-form-kicker">WELCOME TO CAMPUSCARE</span>
-            <h2>Welcome back</h2>
-            <p>
-              Enter your details to access the campus grievance portal.
-            </p>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="name">Full name</label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(event) => {
-                setName(event.target.value)
-                if (error) setError('')
+          <div className="login-tabs">
+            <button
+              type="button"
+              className={mode === 'existing' ? 'login-tab active' : 'login-tab'}
+              onClick={() => {
+                setMode('existing')
+                setMessage('')
               }}
-              placeholder="Enter your full name"
-              autoComplete="name"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="role">Login as</label>
-            <select
-              id="role"
-              value={role}
-              onChange={(event) => setRole(event.target.value)}
             >
-              <option value="Student">Student / Staff</option>
-              <option value="Admin">Administrator</option>
-            </select>
+              Existing User
+            </button>
+
+            <button
+              type="button"
+              className={mode === 'new' ? 'login-tab active' : 'login-tab'}
+              onClick={() => {
+                setMode('new')
+                setMessage('')
+              }}
+            >
+              New User
+            </button>
           </div>
 
-          {error && (
-            <p className="error-message" role="alert">
-              {error}
+          {mode === 'new' && (
+            <label>
+              Full name
+              <input
+                type="text"
+                placeholder="Enter your full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </label>
+          )}
+
+          <label>
+            Email address
+            <input
+              type="email"
+              placeholder="you@college.edu"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
+
+          <label>
+            Password
+            <input
+              type="password"
+              placeholder={
+                mode === 'new' ? 'At least 6 characters' : 'Enter your password'
+              }
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={mode === 'new' ? 6 : undefined}
+              required
+            />
+          </label>
+
+          {message && (
+            <p className="login-message" role="status">
+              {message}
             </p>
           )}
 
-          <button className="primary-btn" type="submit">
-            Enter CampusCare <span aria-hidden="true">→</span>
+          <button type="submit" className="primary-btn">
+            {mode === 'existing'
+              ? 'Log In →'
+              : 'Create Account →'}
           </button>
 
-          <div className="demo-note">
-            <strong>
-              <span aria-hidden="true">✦ </span>
-              Prototype access
-            </strong>
-            <br />
-            This is a frontend demonstration. No password or real account
-            verification is used yet.
-          </div>
+          <p className="login-switch">
+            {mode === 'existing'
+              ? "Don't have an account? "
+              : 'Already have an account? '}
 
-          <div className="login-security-note">
-            Designed for a campus where every voice matters.
-          </div>
+            <button
+              type="button"
+              onClick={() => {
+                setMode(mode === 'existing' ? 'new' : 'existing')
+                setMessage('')
+              }}
+            >
+              {mode === 'existing' ? 'Sign up' : 'Log in'}
+            </button>
+          </p>
+
+          <p className="demo-note">
+            CampusCare · Smart Campus Grievance Portal
+          </p>
         </form>
-      </section>
+      </div>
     </div>
   )
 }
