@@ -23,32 +23,96 @@ export default function Login({ onLogin }) {
 
   return (
     <div className="login-page">
+      {/* LEFT SIDE — PREMIUM HERO */}
       <section className="login-art">
-        <div className="login-brand">✦ CampusCare</div>
-        <h1>A better campus starts with being heard.</h1>
-        <p>
-          One simple platform to report campus issues, follow their progress,
-          and help make your campus a better place for everyone.
-        </p>
-        <div className="login-features">
-          ✓ &nbsp; Easy complaint submission<br />
-          ✓ &nbsp; Transparent status tracking<br />
-          ✓ &nbsp; Better campus services
+        <div className="login-glow login-glow-one" />
+        <div className="login-glow login-glow-two" />
+
+        <div className="login-brand">
+          <span className="login-brand-icon">✦</span>
+          <span>CampusCare</span>
+          <span className="login-brand-tag">SMART CAMPUS</span>
+        </div>
+
+        <div className="login-hero-content">
+          <div className="login-eyebrow">
+            <span className="login-eyebrow-dot" />
+            YOUR VOICE. YOUR CAMPUS.
+          </div>
+
+          <h1>
+            Small voices.
+            <br />
+            <span>Meaningful change.</span>
+          </h1>
+
+          <p className="login-hero-description">
+            A better campus begins when someone speaks up.
+            Share concerns, track every update, and help create
+            a place where everyone belongs.
+          </p>
+
+          <div className="login-features">
+            <div className="login-feature">
+              <span className="login-feature-icon">↗</span>
+              <div>
+                <strong>Speak up with ease</strong>
+                <small>
+                  Report campus concerns in a few simple steps
+                </small>
+              </div>
+            </div>
+
+            <div className="login-feature">
+              <span className="login-feature-icon">◎</span>
+              <div>
+                <strong>Know what’s happening</strong>
+                <small>
+                  Follow your complaint from start to finish
+                </small>
+              </div>
+            </div>
+
+            <div className="login-feature">
+              <span className="login-feature-icon">✳</span>
+              <div>
+                <strong>Make change together</strong>
+                <small>
+                  Help build a safer, better campus for everyone
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div className="login-art-footer">
+            <span className="login-footer-line" />
+            A campus that listens is a campus that grows.
+          </div>
         </div>
       </section>
 
+      {/* RIGHT SIDE — LOGIN FORM */}
       <section className="login-form-side">
         <form className="login-form" onSubmit={handleSubmit}>
-          <h2>Welcome back</h2>
-          <p>Enter your details to access the campus grievance portal.</p>
+          <div className="login-form-heading">
+            <span className="login-form-kicker">WELCOME TO CAMPUSCARE</span>
+            <h2>Welcome back</h2>
+            <p>
+              Enter your details to access the campus grievance portal.
+            </p>
+          </div>
 
           <div className="form-group">
             <label htmlFor="name">Full name</label>
             <input
               id="name"
+              type="text"
               value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="Enter your name"
+              onChange={(event) => {
+                setName(event.target.value)
+                if (error) setError('')
+              }}
+              placeholder="Enter your full name"
               autoComplete="name"
             />
           </div>
@@ -65,16 +129,28 @@ export default function Login({ onLogin }) {
             </select>
           </div>
 
-          {error && <p className="error-message">{error}</p>}
+          {error && (
+            <p className="error-message" role="alert">
+              {error}
+            </p>
+          )}
 
           <button className="primary-btn" type="submit">
-            Enter CampusCare →
+            Enter CampusCare <span aria-hidden="true">→</span>
           </button>
 
           <div className="demo-note">
-            <strong>Prototype access</strong><br />
+            <strong>
+              <span aria-hidden="true">✦ </span>
+              Prototype access
+            </strong>
+            <br />
             This is a frontend demonstration. No password or real account
             verification is used yet.
+          </div>
+
+          <div className="login-security-note">
+            Designed for a campus where every voice matters.
           </div>
         </form>
       </section>

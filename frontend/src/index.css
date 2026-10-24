@@ -1,45 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-/* ------------------------------------------------------------------
-   Design tokens. Change colours, spacing and radius here and the whole
-   app updates.
-------------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
 :root {
-  --font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-family: 'DM Sans', sans-serif;
+  color: #26342e;
+  background: #f6f5ef;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
-  /* Brand */
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
-  --primary-soft: #eef0ff;
-  --primary-ring: rgba(79, 70, 229, 0.22);
+  --font: 'DM Sans', sans-serif;
 
-  /* Sidebar */
-  --navy-950: #0a1020;
-  --navy-900: #0f172a;
-  --navy-800: #1b2540;
-  --navy-text: #98a2b8;
+  --primary: #285548;
+  --primary-hover: #1d4237;
+  --primary-soft: #e8f0eb;
+  --primary-ring: rgba(40, 85, 72, 0.18);
 
-  /* Surfaces and text */
-  --bg: #f4f6fb;
-  --surface: #ffffff;
-  --border: #e5e8f0;
-  --border-strong: #d3d8e4;
-  --track: #edf0f6;
-  --text: #0f172a;
-  --text-2: #475467;
-  --muted: #667085;
+  --navy-950: #172f28;
+  --navy-900: #1c3a31;
+  --navy-800: #2a4a3f;
+  --navy-text: #c0cec5;
 
-  /* Status colours (text / background / chart) */
-  --amber: #b45309;
-  --amber-bg: #fef3c7;
-  --blue: #1d4ed8;
-  --blue-bg: #dbeafe;
-  --green: #047857;
-  --green-bg: #d1fae5;
-  --rose: #be123c;
-  --rose-bg: #ffe4e6;
+  --bg: #f6f5ef;
+  --surface: #fffefa;
+  --border: #e7e4da;
+  --border-strong: #d6d1c4;
+  --track: #eeece4;
 
-  /* Spacing scale */
+  --text: #26342e;
+  --text-2: #58675f;
+  --muted: #7b857d;
+  --text-muted: #7b857d;
+  --surface-muted: #f5f4ed;
+
+  --amber: #986b25;
+  --amber-bg: #f7edd8;
+  --blue: #315d82;
+  --blue-bg: #e4edf5;
+  --green: #28684d;
+  --green-bg: #e0eee3;
+  --rose: #a44444;
+  --rose-bg: #f7e6e2;
+
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -48,25 +51,15 @@
   --space-6: 24px;
   --space-8: 32px;
 
-  /* Radius */
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 16px;
+  --radius-sm: 5px;
+  --radius: 9px;
+  --radius-lg: 13px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
-  --shadow: 0 1px 3px rgba(16, 24, 40, 0.06), 0 4px 16px rgba(16, 24, 40, 0.04);
-  --shadow-lg: 0 24px 60px rgba(10, 16, 32, 0.28);
+  --shadow-sm: 0 1px 2px rgba(38, 52, 46, 0.04);
+  --shadow: 0 3px 12px rgba(38, 52, 46, 0.035);
+  --shadow-lg: 0 16px 40px rgba(23, 47, 40, 0.12);
 
-  --sidebar-width: 264px;
-
-  font-family: var(--font);
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --sidebar-width: 250px;
 }
 
 *,
@@ -76,6 +69,7 @@
 }
 
 html {
+  min-width: 320px;
   scroll-behavior: smooth;
 }
 
@@ -85,8 +79,8 @@ body {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 h1,
@@ -95,6 +89,14 @@ h3,
 h4,
 p {
   margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Manrope', sans-serif;
+  color: var(--text);
 }
 
 button,
@@ -119,8 +121,8 @@ a {
 }
 
 img {
-  max-width: 100%;
   display: block;
+  max-width: 100%;
 }
 
 ul,
@@ -132,7 +134,12 @@ ol {
 
 :focus-visible {
   outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+::selection {
+  background: #d7e6dc;
+  color: #18372f;
 }
 
 @media (prefers-reduced-motion: reduce) {
